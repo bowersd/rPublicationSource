@@ -2,9 +2,54 @@ library(ggplot2)
 library(plyr)
 library(ellipse)
 library(cowplot)
+library(tidyr)
+library(dplyr)
+library(gridExtra)
 
-#this is available upon request
+#data is available upon request
 guj = read.table("/home/sautedman/sideProjects/gujarati/stress/flashStickBackup/master/master.tsv", header = TRUE, sep = "\t")
+
+#{figure 1
+gujallinit = guj[guj$StressHyp=='initial' | guj$Word %in% 
+                    list( 
+                         "amboro",
+                         "daabori",
+                         "naarangi",
+                         "naaraajgi",
+                         "jaamburo",
+                         "limburi",
+                         "parikshaa",
+                         "kavitaa",
+                         "daagino",
+                         "nagino",
+                         "hoshiyaar"), ]
+gujallinit$SyllPos = factor(gujallinit$SyllPos, levels = c("initial", "medial", "final"))
+levels(gujallinit$SyllPos) = c(1,2,3) 
+
+pFemalemin <- ggplot(gujallinit[gujallinit$Gender=="female", ] , aes(x=as.integer(SyllPos), y=F0_min-min_min, color=Vowel)) +
+    geom_point(shape=1) +
+    geom_smooth(method="loess", se=F, span = 1)+
+    scale_x_continuous(breaks=c(1, 2, 3))+
+    ylab('F0 minimum (relative to lowest value for speaker)')+
+    xlab('Syllable Position')+
+    ggtitle("Female Participants")+
+    theme(plot.title = element_text(hjust=0.5))+
+    facet_grid(. ~ SpeakerId)
+
+pMalemin <- ggplot(gujallinit[gujallinit$Gender=="male", ] , aes(x=as.integer(SyllPos), y=F0_min-min_min, color=Vowel)) +
+    geom_smooth(method="loess", se=F, span = 1, size=0.5)+
+    scale_x_continuous(breaks=c(1, 2, 3))+
+    ylab('F0 minimum (relative to lowest value for speaker)')+
+    xlab('Syllable Position')+
+    ggtitle("Male Participants")+
+    theme(plot.title = element_text(hjust=0.5))+
+    facet_wrap( ~ SpeakerId, nrow=3)
+
+pdf("/home/sautedman/sideProjects/gujarati/stress/flashStickBackup/visualization/color/extrapolatedf0.pdf")
+grid.arrange(pMalemin, pFemalemin, nrow=2)
+dev.off()
+
+#}end figure 1
 
 #{figure 5
 
