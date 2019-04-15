@@ -159,7 +159,7 @@ dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
                 scale_x_discrete(name = "Vowel") + 
 		theme_classic()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/duration-position.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-position.pdf")
 dur_pos
 dev.off()
 #}figure 6 end
