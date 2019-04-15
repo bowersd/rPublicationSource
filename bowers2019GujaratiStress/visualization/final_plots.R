@@ -40,6 +40,7 @@ initmostM = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabor
 
 initcore = guj[guj$StressHyp == "initial", ]
 
+son = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" , ]
 sonM = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "male", ]
 #} subsetting, variable management end
 
@@ -51,18 +52,12 @@ extrap_f0_min <- ggplot(initall, aes(x=as.integer(SyllPos), y=F0_min-min_min, co
     xlab('Syllable Position')+
     facet_wrap(Gender ~ SpeakerId)
 
-pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress//visualization/images/extrapolatedf0.pdf")
+pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/extrapolatedf0.pdf")
 grid.arrange(extrap_f0_min)
 dev.off()
 #} figure 1 end
 
 #{figure 5
-
-#library(ggplot2)
-##library(cowplot)
-#library(tidyr)
-#library(dplyr)
-#library(gridExtra)
 
 #need to plot ellipses, means, and environment labels for vowel categories
 pos_df_ell <- data.frame()
@@ -134,10 +129,9 @@ pos_means_m = ddply(initmostM, .(v, SyllPos), summarize,
 
 f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_point(shape=1, aes(color=v)) +
-	ggtitle("F1 and F2")+
-        theme(plot.title = element_text(hjust=0.5)) +
 	ylab("F1 (Hz)") +
 	xlab("F2 (Hz)") +
+        scale_fill_discrete(name = "Vowel") + 
         coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
 	scale_y_reverse() + scale_x_reverse() +
 	#ellipses
@@ -152,21 +146,22 @@ f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
 	geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
 
-#cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/all-formants-position.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/all-formants-position.pdf")
 f1f2init
-#dev.off()
+dev.off()
 
 #}figure 5 end
 
 #{figure 6
 dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
 		geom_boxplot() +
-		scale_y_continuous(name ="Duration (ms)") + scale_x_discrete(name = "Vowel") + 
+		scale_y_continuous(name ="Duration (ms)") + 
+                scale_x_discrete(name = "Vowel") + 
 		theme_classic()
 
-#cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/duration-position.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/duration-position.pdf")
 dur_pos
-#dev.off()
+dev.off()
 #}figure 6 end
 
 #{figure 7
@@ -215,11 +210,21 @@ f1f2m = ggplot(sonM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_errorbarh(data = str_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
 	geom_errorbar(data = str_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black")
 
-#cairo_pdf("/Volumes/UUI/Guj/Visualization/Grayscale/MaleFormants.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/MaleFormants.pdf")
 f1f2m
-#dev.off()
+dev.off()
 
 #}figure 7 end
 
 #{figure 8
+dur_str = ggplot(data=son, aes(x=v, y=Duration_ms, fill = StressVal)) +
+		geom_boxplot() +
+		scale_y_continuous(name ="Duration (ms)") + 
+                scale_x_discrete(name = "Vowel") + 
+		scale_fill_discrete(name = "Stress Value") + 
+		theme_classic()
+
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/AllSpeakersDuration.pdf")
+dur_str
+dev.off()
 #}figure 8 end
