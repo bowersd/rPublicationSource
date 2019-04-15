@@ -153,3 +153,12 @@ f1f2init
 #dev.off()
 
 #}figure 5 end
+
+#{figure 6
+#}figure 6 end
+
+#{figure 7
+#}figure 7 end
+
+#{figure 8
+#}figure 8 end
