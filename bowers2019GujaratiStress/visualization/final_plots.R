@@ -14,7 +14,7 @@ guj$v = factor(guj$Vowel, levels = c("a", "o", "e", "u", "i", "A"))
 levels(guj$v) = list("\u0251"="a", "o"="o", "e"="e", "u"="u", "i"="i", "\u0259" = "A")
 
 #all core initial stress items + others (used in F0 comparison in initial stress hypothesis)
-gujinit = guj[guj$StressHyp=='initial' | guj$Word %in% 
+initall = guj[guj$StressHyp=='initial' | guj$Word %in% 
                     list( 
                          "amboro",
                          "daabori",
@@ -28,19 +28,23 @@ gujinit = guj[guj$StressHyp=='initial' | guj$Word %in%
                          "nagino",
                          "hoshiyaar"), ]
 
-gujinit$SyllPos = factor(gujinit$SyllPos, levels = c("initial", "medial", "final"))
-levels(gujinit$SyllPos) = c(1,2,3) 
+initall$SyllPos = factor(initall$SyllPos, levels = c("initial", "medial", "final"))
+levels(initall$SyllPos) = c(1,2,3) 
 
-gujinit = gujinit %>% group_by(SpeakerId) %>% mutate(min_max=min(F0_max), min_min=min(F0_min))
+initall = initall %>% group_by(SpeakerId) %>% mutate(min_max=min(F0_max), min_min=min(F0_min))
 
 #subset of data for f1-f2 plot in initial stress condition
 initmost = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) , ]
 initmostF = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "female", ]
 initmostM = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "male", ]
+
+initcore = guj[guj$StressHyp == "initial", ]
+
+sonM = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "male", ]
 #} subsetting, variable management end
 
 #{figure 1
-extrap_f0_min <- ggplot(gujinit, aes(x=as.integer(SyllPos), y=F0_min-min_min, color=Vowel)) +
+extrap_f0_min <- ggplot(initall, aes(x=as.integer(SyllPos), y=F0_min-min_min, color=Vowel)) +
     geom_smooth(method="loess", se=F, span = 1, size=0.5)+
     scale_x_continuous(breaks=c(1, 2, 3))+
     ylab('F0 minimum (relative to lowest value for speaker)')+
@@ -155,9 +159,66 @@ f1f2init
 #}figure 5 end
 
 #{figure 6
+dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
+		geom_boxplot() +
+		scale_y_continuous(name ="Duration (ms)") + scale_x_discrete(name = "Vowel") + 
+		theme_classic()
+
+#cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/duration-position.pdf")
+dur_pos
+#dev.off()
 #}figure 6 end
 
 #{figure 7
+str_means_m = ddply(sonM, .(v, StressVal), summarize,
+	F1_sd = sqrt(var(F1_Hz)),
+	F2_sd = sqrt(var(F2_Hz)),
+	F1_se = sqrt(var(F1_Hz))/length(F1_Hz), 
+	F2_se = sqrt(var(F2_Hz))/length(F2_Hz),
+	F1_Hz = mean(F1_Hz),
+	F2_Hz = mean(F2_Hz))
+
+df_ell <- data.frame()
+for(g in levels(sonM$v)){
+df_ell <- rbind(df_ell, cbind(as.data.frame(with(sonM[sonM$v==g,], ellipse(cor(F2_Hz, F1_Hz), 
+                                         scale=c(sd(F2_Hz),sd(F1_Hz)), 
+                                         centre=c(mean(F2_Hz),mean(F1_Hz))))),group=g))
+}
+
+df_lab = data.frame(
+	F2 = c(650, 690, 1060, 1240, 2250, 2700,
+               720, 820, 1180, 1360, 2000, 2500,#u
+               730, 790, 1200, 1540, 2030, 2500 #s
+               ),
+	F1 = c(350, 440, 560, 750, 470, 355,
+               390, 430, 520, 760, 470, 355, #u
+               365, 450, 585, 750, 450, 335  #s
+               ),
+	label = c("u", "o", "\u0259", "\u0251", "e", "i",
+                  "\u0251_", "_i", "u_", "#_", "\u0251_", "\u0251_",
+                  "i_", "_o", "\u0259_", "", "\u0259_", "\u0259_"  ),
+	v = c("u", "o", "\u0259", "\u0251", "e", "i")
+	)
+
+f1f2m = ggplot(sonM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+	geom_point(shape=1, aes(color=v)) +
+	#axes, etc
+	ylab("F1 (Hz)") +
+	xlab("F2 (Hz)") +
+	scale_y_reverse() + scale_x_reverse() +
+	#ellipses
+	geom_path(data=df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+	geom_text(data = df_lab, aes(x=F2, y=F1, label=label)) +
+	#means and error bars
+	geom_point(data = str_means_m, aes(shape = StressVal),  size=4, fill = "black") +
+	scale_shape_manual(values=c(21, 24), name="Stress Value") +
+	geom_errorbarh(data = str_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
+	geom_errorbar(data = str_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black")
+
+#cairo_pdf("/Volumes/UUI/Guj/Visualization/Grayscale/MaleFormants.pdf")
+f1f2m
+#dev.off()
+
 #}figure 7 end
 
 #{figure 8
