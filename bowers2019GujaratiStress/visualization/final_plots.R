@@ -127,6 +127,41 @@ pos_means_m = ddply(initmostM, .(v, SyllPos), summarize,
 	F1_Hz = mean(F1_Hz),
 	F2_Hz = mean(F2_Hz))
 
+f1f2initF = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  geom_point(shape=1, aes(color=v)) +
+  ylab("F1 (Hz)") +
+  xlab("F2 (Hz)") +
+  scale_color_discrete(name = "Vowel") + 
+  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+  scale_y_reverse() +
+  scale_x_reverse() +
+  #ellipses
+  geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+  geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
+  #means and error bars
+  geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "dark gray") +
+  scale_shape_manual(values=c(1, 2,0), name="Position ") +
+  geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "dark gray") +
+  geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "dark gray")
+
+f1f2initM = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  geom_point(shape=1, aes(color=v)) +
+  ylab("F1 (Hz)") +
+  xlab("F2 (Hz)") +
+  scale_color_discrete(name = "Vowel") + 
+  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+  scale_y_reverse() +
+  scale_x_reverse() +
+  #ellipses
+  geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+  geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
+  #means and error bars
+  scale_shape_manual(values=c(1, 2,0), name="Position ") +
+  geom_point(data = pos_means_m, aes(shape = SyllPos),  size=3, fill = NA) +
+  geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
+  geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
+
+
 f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_point(shape=1, aes(color=v)) +
 	ylab("F1 (Hz)") +
@@ -199,10 +234,12 @@ df_lab = data.frame(
 
 f1f2m = ggplot(sonM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_point(shape=1, aes(color=v)) +
+  scale_color_discrete(name="Vowel") +
 	#axes, etc
 	ylab("F1 (Hz)") +
 	xlab("F2 (Hz)") +
-	scale_y_reverse() + scale_x_reverse() +
+	scale_y_reverse() +
+  scale_x_reverse() +
 	#ellipses
 	geom_path(data=df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
 	geom_text(data = df_lab, aes(x=F2, y=F1, label=label)) +
