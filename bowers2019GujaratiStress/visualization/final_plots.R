@@ -1,9 +1,9 @@
 library(ggplot2)
 library(tidyr)
+library(plyr)
 library(dplyr)
 library(gridExtra)
 library(ellipse)
-library(plyr)
 
 ##data is available upon request
 guj = read.table("/home/sautedman/sideProjects/gujarati/stress/flashStickBackup/master/master.tsv", header=TRUE, sep="\t")
