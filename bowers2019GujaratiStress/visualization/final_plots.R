@@ -13,6 +13,9 @@ guj = read.table("/home/sautedman/sideProjects/gujarati/stress/flashStickBackup/
 guj$v = factor(guj$Vowel, levels = c("a", "o", "e", "u", "i", "A"))
 levels(guj$v) = list("\u0251"="a", "o"="o", "e"="e", "u"="u", "i"="i", "\u0259" = "A")
 
+guj$SyllPos = factor(guj$SyllPos, levels = c("initial", "medial", "final"))
+levels(guj$SyllPos) = c(1,2,3) 
+
 #all core initial stress items + others (used in F0 comparison in initial stress hypothesis)
 initall = guj[guj$StressHyp=='initial' | guj$Word %in% 
                     list( 
@@ -27,9 +30,6 @@ initall = guj[guj$StressHyp=='initial' | guj$Word %in%
                          "daagino",
                          "nagino",
                          "hoshiyaar"), ]
-
-initall$SyllPos = factor(initall$SyllPos, levels = c("initial", "medial", "final"))
-levels(initall$SyllPos) = c(1,2,3) 
 
 initall = initall %>% group_by(SpeakerId) %>% mutate(min_max=min(F0_max), min_min=min(F0_min))
 
@@ -131,15 +131,16 @@ f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_point(shape=1, aes(color=v)) +
 	ylab("F1 (Hz)") +
 	xlab("F2 (Hz)") +
-        scale_fill_discrete(name = "Vowel") + 
-        coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
-	scale_y_reverse() + scale_x_reverse() +
+  scale_color_discrete(name = "Vowel") + 
+  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+	scale_y_reverse() +
+  scale_x_reverse() +
 	#ellipses
 	geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
 	geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
 	#means and error bars
 	geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "dark gray") +
-	scale_shape_manual(values=c(1, 2,0), name="Syllable Position ") +
+	scale_shape_manual(values=c(1, 2,0), name="Position ") +
 	geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "dark gray") +
 	geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "dark gray") +
 	geom_point(data = pos_means_m, aes(shape = SyllPos),  size=3, fill = NA) +
@@ -155,8 +156,9 @@ dev.off()
 #{figure 6
 dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
 		geom_boxplot() +
-		scale_y_continuous(name ="Duration (ms)") + 
-                scale_x_discrete(name = "Vowel") + 
+		scale_y_continuous(name ="Duration (ms)") +
+    scale_x_discrete(name = "Vowel") + 
+    scale_fill_discrete(name="Position") +
 		theme_classic()
 
 cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-position.pdf")
