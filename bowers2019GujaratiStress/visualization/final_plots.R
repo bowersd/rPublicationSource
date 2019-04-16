@@ -42,6 +42,7 @@ initcore = guj[guj$StressHyp == "initial", ]
 
 son = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" , ]
 sonM = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "male", ]
+sonF = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "female", ]
 #} subsetting, variable management end
 
 #{figure 1
