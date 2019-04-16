@@ -61,12 +61,26 @@ dev.off()
 #{figure 5
 
 #need to plot ellipses, means, and environment labels for vowel categories
-pos_df_ell <- data.frame()
-for(g in levels(initmost$v)){
-pos_df_ell <- rbind(pos_df_ell, cbind(as.data.frame(with(initmost[initmost$v==g,], ellipse(cor(F2_Hz, F1_Hz), 
-                                         scale=c(sd(F2_Hz),sd(F1_Hz)), 
-                                         centre=c(mean(F2_Hz),mean(F1_Hz))))),group=g))
+pos_df_ell_m <- data.frame()
+for(g in levels(initmostM$v)){
+  pos_df_ell_m <- rbind(pos_df_ell_m, cbind(as.data.frame(with(initmostM[initmostM$v==g,], ellipse(cor(F2_Hz, F1_Hz), 
+                                                                                             scale=c(sd(F2_Hz),sd(F1_Hz)), 
+                                                                                             centre=c(mean(F2_Hz),mean(F1_Hz))))),group=g))
 }
+
+pos_df_ell_f <- data.frame()
+for(g in levels(initmostF$v)){
+  pos_df_ell_f <- rbind(pos_df_ell_f, cbind(as.data.frame(with(initmostF[initmostF$v==g,], ellipse(cor(F2_Hz, F1_Hz), 
+                                                                                             scale=c(sd(F2_Hz),sd(F1_Hz)), 
+                                                                                             centre=c(mean(F2_Hz),mean(F1_Hz))))),group=g))
+}
+
+# pos_df_ell <- data.frame()
+# for(g in levels(initmost$v)){
+# pos_df_ell <- rbind(pos_df_ell, cbind(as.data.frame(with(initmost[initmost$v==g,], ellipse(cor(F2_Hz, F1_Hz), 
+#                                          scale=c(sd(F2_Hz),sd(F1_Hz)), 
+#                                          centre=c(mean(F2_Hz),mean(F1_Hz))))),group=g))
+# }
 
 #v_ellipses = data.frame()
 #for(x in levels(initmost$v)){
@@ -81,6 +95,42 @@ pos_df_ell <- rbind(pos_df_ell, cbind(as.data.frame(with(initmost[initmost$v==g,
 #        }
 #    }
 #}
+
+pos_df_lab_f = data.frame(
+  F2 = c(650, 750, 1080,  2900, 
+         #female syll position labels
+         1770, 1730, 1700,
+         2880, 2800, 2300),
+  F1 = c(350, 500, 750,  275, 
+         #female syll position labels
+         990, 890, 820,
+         340, 380, 410),
+  label = c("u", "o",  "\u0251",  "i", 
+            #female environment labels
+            "#_", "\u0259_", "u_",
+            "#_", "o/\u0251_", ""),
+  v = c("u", "o",  "\u0251",  "i", 
+        "", "", "",
+        "", "", "")
+)
+
+pos_df_lab_m = data.frame(
+  F2 = c(650, 750, 1080,  2900, 
+         #male syllable position labels
+         1450, 1440, 1420,
+         2500, 2340, 2300),
+  F1 = c(350, 500, 750,  275, 
+         #male syllable position labels
+         750, 710, 680,
+         320, 365, 410),
+  label = c("u", "o",  "\u0251",  "i", 
+            #male environment labels
+            "#_", "\u0259_", "u_",
+            "#_", "o_", "\u0251_"),
+  v = c("u", "o",  "\u0251",  "i", 
+        "", "", "",
+        "", "", "")
+)
 
 
 pos_df_lab = data.frame(
@@ -128,7 +178,7 @@ pos_means_m = ddply(initmostM, .(v, SyllPos), summarize,
 	F1_Hz = mean(F1_Hz),
 	F2_Hz = mean(F2_Hz))
 
-f1f2initF = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+f1f2init_f = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -137,15 +187,15 @@ f1f2initF = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   scale_y_reverse() +
   scale_x_reverse() +
   #ellipses
-  geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
-  geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
+  geom_path(data=pos_df_ell_f, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+  geom_text(data = pos_df_lab_f, aes(x=F2, y=F1, label=label)) +
   #means and error bars
-  geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "dark gray") +
+  geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "black") +
   scale_shape_manual(values=c(1, 2,0), name="Position ") +
-  geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "dark gray") +
-  geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "dark gray")
+  geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
+  geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black")
 
-f1f2initM = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+f1f2init_m = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -154,38 +204,37 @@ f1f2initM = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   scale_y_reverse() +
   scale_x_reverse() +
   #ellipses
-  geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
-  geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
+  geom_path(data=pos_df_ell_m, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+  geom_text(data = pos_df_lab_m, aes(x=F2, y=F1, label=label)) +
   #means and error bars
   scale_shape_manual(values=c(1, 2,0), name="Position ") +
   geom_point(data = pos_means_m, aes(shape = SyllPos),  size=3, fill = NA) +
   geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
   geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
 
-
-f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
-	geom_point(shape=1, aes(color=v)) +
-	ylab("F1 (Hz)") +
-	xlab("F2 (Hz)") +
-  scale_color_discrete(name = "Vowel") + 
-  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
-	scale_y_reverse() +
-  scale_x_reverse() +
-	#ellipses
-	geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
-	geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
-	#means and error bars
-	geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "dark gray") +
-	scale_shape_manual(values=c(1, 2,0), name="Position ") +
-	geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "dark gray") +
-	geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "dark gray") +
-	geom_point(data = pos_means_m, aes(shape = SyllPos),  size=3, fill = NA) +
-	geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
-	geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
-
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/all-formants-position.pdf")
-f1f2init
-dev.off()
+# f1f2init = ggplot(initmost, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+# 	geom_point(shape=1, aes(color=v)) +
+# 	ylab("F1 (Hz)") +
+# 	xlab("F2 (Hz)") +
+#   scale_color_discrete(name = "Vowel") + 
+#   coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+# 	scale_y_reverse() +
+#   scale_x_reverse() +
+# 	#ellipses
+# 	geom_path(data=pos_df_ell, aes(x=x, y=y, group=group), size=0.5, linetype = 2) +
+# 	geom_text(data = pos_df_lab, aes(x=F2, y=F1, label=label)) +
+# 	#means and error bars
+# 	geom_point(data = pos_means_f, aes(shape = SyllPos),  size=3, color = "dark gray") +
+# 	scale_shape_manual(values=c(1, 2,0), name="Position ") +
+# 	geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "dark gray") +
+# 	geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "dark gray") +
+# 	geom_point(data = pos_means_m, aes(shape = SyllPos),  size=3, fill = NA) +
+# 	geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
+# 	geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
+# 
+# cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/all-formants-position.pdf")
+# f1f2init
+# dev.off()
 
 #}figure 5 end
 
