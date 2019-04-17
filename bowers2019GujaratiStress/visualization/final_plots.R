@@ -308,7 +308,7 @@ dur_str = ggplot(data=son, aes(x=v, y=Duration_ms, fill = StressVal)) +
 		scale_fill_discrete(name = "Stress Value") + 
 		theme_classic()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/AllSpeakersDuration.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-sonority.pdf")
 dur_str
 dev.off()
 #}figure 8 end
