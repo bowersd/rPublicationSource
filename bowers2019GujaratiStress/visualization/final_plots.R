@@ -35,14 +35,14 @@ initall = initall %>% group_by(SpeakerId) %>% mutate(min_max=min(F0_max), min_mi
 
 #subset of data for f1-f2 plot in initial stress condition
 initmost = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) , ]
-initmostF = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "female", ]
-initmostM = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "male", ]
+initmost_f = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "female", ]
+initmost_m = guj[(guj$StressHyp == "initial"|guj$Word %in% list("amboro", "daabori")) & guj$Gender == "male", ]
 
 initcore = guj[guj$StressHyp == "initial", ]
 
 son = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" , ]
-sonM = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "male", ]
-sonF = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "female", ]
+son_m = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "male", ]
+son_f = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj$Gender == "female", ]
 #} subsetting, variable management end
 
 #{figure 1
@@ -58,7 +58,7 @@ grid.arrange(extrap_f0_min)
 dev.off()
 #} figure 1 end
 
-#{figure 5
+#{figure 5 and accompanying female plot (appendix)
 
 #need to plot ellipses, means, and environment labels for vowel categories
 pos_df_ell_m <- data.frame()
@@ -133,36 +133,36 @@ pos_df_lab_m = data.frame(
 )
 
 
-pos_df_lab = data.frame(
-	F2 = c(650, 750, 1080,  2900, 
-               #female labels
-               1770, 1730, 1700,
-               2880, 2800, 2300,
-               #male labels
-               1450, 1440, 1420,
-               2500, 2340, 2300),
-	F1 = c(350, 500, 750,  275, 
-               #female labels
-               990, 890, 820,
-               340, 380, 410,
-               #male labels
-               750, 710, 680,
-               320, 365, 410),
-	label = c("u", "o",  "\u0251",  "i", 
-                  #female labels
-                  "#_", "\u0259_", "u_",
-                  "#_", "o/\u0251_", "",
-                  #male labels
-                  "#_", "\u0259_", "u_",
-                  "#_", "o_", "\u0251_"),
-	v = c("u", "o",  "\u0251",  "i", 
-              "", "", "",
-              "", "", "", 
-              "", "", "",
-              "", "", "" )
-	)
+# pos_df_lab = data.frame(
+# 	F2 = c(650, 750, 1080,  2900, 
+#                #female labels
+#                1770, 1730, 1700,
+#                2880, 2800, 2300,
+#                #male labels
+#                1450, 1440, 1420,
+#                2500, 2340, 2300),
+# 	F1 = c(350, 500, 750,  275, 
+#                #female labels
+#                990, 890, 820,
+#                340, 380, 410,
+#                #male labels
+#                750, 710, 680,
+#                320, 365, 410),
+# 	label = c("u", "o",  "\u0251",  "i", 
+#                   #female labels
+#                   "#_", "\u0259_", "u_",
+#                   "#_", "o/\u0251_", "",
+#                   #male labels
+#                   "#_", "\u0259_", "u_",
+#                   "#_", "o_", "\u0251_"),
+# 	v = c("u", "o",  "\u0251",  "i", 
+#               "", "", "",
+#               "", "", "", 
+#               "", "", "",
+#               "", "", "" )
+# 	)
 
-pos_means_f = ddply(initmostF, .(v, SyllPos), summarize,
+pos_means_f = ddply(initmost_f, .(v, SyllPos), summarize,
 	F1_sd = sqrt(var(F1_Hz)),
 	F2_sd = sqrt(var(F2_Hz)),
 	F1_se = sqrt(var(F1_Hz))/length(F1_Hz), 
@@ -170,7 +170,7 @@ pos_means_f = ddply(initmostF, .(v, SyllPos), summarize,
 	F1_Hz = mean(F1_Hz),
 	F2_Hz = mean(F2_Hz))
 
-pos_means_m = ddply(initmostM, .(v, SyllPos), summarize,
+pos_means_m = ddply(initmost_m, .(v, SyllPos), summarize,
 	F1_sd = sqrt(var(F1_Hz)),
 	F2_sd = sqrt(var(F2_Hz)),
 	F1_se = sqrt(var(F1_Hz))/length(F1_Hz), 
@@ -178,7 +178,7 @@ pos_means_m = ddply(initmostM, .(v, SyllPos), summarize,
 	F1_Hz = mean(F1_Hz),
 	F2_Hz = mean(F2_Hz))
 
-f1f2init_f = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+f1f2init_f = ggplot(initmost_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -195,7 +195,7 @@ f1f2init_f = ggplot(initmostF, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   geom_errorbarh(data = pos_means_f, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
   geom_errorbar(data = pos_means_f, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black")
 
-f1f2init_m = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+f1f2init_m = ggplot(initmost_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -232,11 +232,15 @@ f1f2init_m = ggplot(initmostM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 # 	geom_errorbarh(data = pos_means_m, aes(xmin=F2_Hz - F2_sd, xmax=F2_Hz + F2_sd, y = F1_Hz, height = 0.01), color = "black") +
 # 	geom_errorbar(data = pos_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black") 
 # 
-# cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/all-formants-position.pdf")
-# f1f2init
-# dev.off()
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-female.pdf")
+f1f2init_f
+dev.off()
 
-#}figure 5 end
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-male.pdf")
+f1f2init_m
+dev.off()
+
+#}figure 5 and accompanying female plot (appendix) end
 
 #{figure 6
 dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
@@ -252,7 +256,7 @@ dev.off()
 #}figure 6 end
 
 #{figure 7
-str_means_m = ddply(sonM, .(v, StressVal), summarize,
+str_means_m = ddply(son_m, .(v, StressVal), summarize,
 	F1_sd = sqrt(var(F1_Hz)),
 	F2_sd = sqrt(var(F2_Hz)),
 	F1_se = sqrt(var(F1_Hz))/length(F1_Hz), 
@@ -282,7 +286,7 @@ df_lab = data.frame(
 	v = c("u", "o", "\u0259", "\u0251", "e", "i")
 	)
 
-f1f2m = ggplot(sonM, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+f1f2m = ggplot(son_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_point(shape=1, aes(color=v)) +
   scale_color_discrete(name="Vowel") +
 	#axes, etc
