@@ -97,14 +97,14 @@ for(g in levels(initmostF$v)){
 #}
 
 pos_df_lab_f = data.frame(
-  F2 = c(650, 750, 1080,  2900, 
+  F2 = c(620, 750, 1150,  3000, 
          #female syll position labels
          1770, 1730, 1700,
          2880, 2800, 2300),
-  F1 = c(350, 500, 750,  275, 
+  F1 = c(350, 500, 750,  400, 
          #female syll position labels
-         990, 890, 820,
-         340, 380, 410),
+         1000, 900, 840,
+         310, 400, 410),
   label = c("u", "o",  "\u0251",  "i", 
             #female environment labels
             "#_", "\u0259_", "u_",
