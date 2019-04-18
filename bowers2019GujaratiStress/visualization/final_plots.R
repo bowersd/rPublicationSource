@@ -134,7 +134,7 @@ f1f2init_m = ggplot(initmost_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
   scale_color_discrete(name = "Vowel") + 
-  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+  #coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
   scale_y_reverse() +
   scale_x_reverse() +
   #ellipses
@@ -152,7 +152,7 @@ f1f2init_f = ggplot(initmost_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
   scale_color_discrete(name = "Vowel") + 
-  coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
+  #coord_cartesian(ylim=c(240,1300), xlim=c(500,3100))+
   scale_y_reverse() +
   scale_x_reverse() +
   #ellipses
