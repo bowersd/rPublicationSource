@@ -69,14 +69,14 @@ for(g in levels(initmost_m$v)){
 }
 
 pos_df_lab_m = data.frame(
-  F2 = c(650, 750, 1080,  2900, 
+  F2 = c(650, 750, 1020,  2650, 
          #male syllable position labels
          1450, 1440, 1420,
          2500, 2340, 2300),
   F1 = c(350, 500, 750,  275, 
          #male syllable position labels
-         750, 710, 680,
-         320, 365, 410),
+         760, 720, 690,
+         340, 365, 410),
   label = c("u", "o",  "\u0251",  "i", 
             #male environment labels
             "#_", "\u0259_", "u_",
