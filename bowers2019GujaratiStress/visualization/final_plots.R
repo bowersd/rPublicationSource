@@ -47,6 +47,7 @@ son_f = guj[guj$StressHyp == "sonority" & guj$StressVal != "controversial" & guj
 
 #{figure 1
 extrap_f0_min <- ggplot(initall, aes(x=as.integer(SyllPos), y=F0_min-min_min, color=Vowel)) +
+    theme_bw()+
     geom_smooth(method="loess", se=F, span = 1, size=0.5)+
     scale_x_continuous(breaks=c(1, 2, 3))+
     ylab('F0 minimum (relative to lowest value for speaker)')+
