@@ -130,6 +130,7 @@ pos_means_f = ddply(initmost_f, .(v, SyllPos), summarize,
 
 ##{plots
 f1f2init_m = ggplot(initmost_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  theme_bw() +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -148,6 +149,7 @@ f1f2init_m = ggplot(initmost_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 
 
 f1f2init_f = ggplot(initmost_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  theme_bw() +
   geom_point(shape=1, aes(color=v)) +
   ylab("F1 (Hz)") +
   xlab("F2 (Hz)") +
@@ -254,6 +256,7 @@ df_lab_f = data.frame(
 
 ##{plots
 f1f2_m = ggplot(son_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  theme_bw() +
 	geom_point(shape=1, aes(color=v)) +
   scale_color_discrete(name="Vowel") +
 	#axes, etc
@@ -271,6 +274,7 @@ f1f2_m = ggplot(son_m, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 	geom_errorbar(data = str_means_m, aes(ymin=F1_Hz - F1_sd, ymax=F1_Hz + F1_sd, x = F2_Hz), color = "black")
 
 f1f2_f = ggplot(son_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
+  theme_bw() +
   geom_point(shape=1, aes(color=v)) +
   scale_color_discrete(name="Vowel") +
   #axes, etc
