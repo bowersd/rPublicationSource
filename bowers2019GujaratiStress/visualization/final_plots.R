@@ -169,11 +169,11 @@ f1f2init_f = ggplot(initmost_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 ##} plots end
 
 ##{write out
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-male.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-male.pdf", width=5, height=5)
 f1f2init_m
 dev.off()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-female.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-position-female.pdf", width=5, height=5)
 f1f2init_f
 dev.off()
 ##}write out end
@@ -187,7 +187,7 @@ dur_pos = ggplot(data=initcore, aes(x=v, y=Duration_ms, fill = SyllPos)) +
     scale_fill_discrete(name="Position") +
 		theme_classic()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-position.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-position.pdf", width=5, height=4)
 dur_pos
 dev.off()
 #}figure 6 end
@@ -294,11 +294,11 @@ f1f2_f = ggplot(son_f, aes(x=F2_Hz, y=F1_Hz, group=v)) +
 ##} plots end
 
 ##{write out
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-sonority-male.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-sonority-male.pdf", width=5, height=5)
 f1f2_m
 dev.off()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-sonority-female.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/formants-sonority-female.pdf", width=5, height=5)
 f1f2_f
 dev.off()
 ##}write out end
@@ -313,7 +313,7 @@ dur_str = ggplot(data=son, aes(x=v, y=Duration_ms, fill = StressVal)) +
 		scale_fill_discrete(name = "Stress Value") + 
 		theme_classic()
 
-cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-sonority.pdf")
+cairo_pdf("/home/sautedman/publications/rPublicationSource/bowers2019GujaratiStress/visualization/images/duration-sonority.pdf", width=5, height=4)
 dur_str
 dev.off()
 #}figure 8 end
